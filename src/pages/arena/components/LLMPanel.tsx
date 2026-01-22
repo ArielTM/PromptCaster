@@ -34,14 +34,6 @@ const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
             )}
           </div>
           <div className="flex items-center gap-2">
-            {response && !response.isComplete && (
-              <span className="text-xs text-[var(--text-secondary)]">
-                Generating...
-              </span>
-            )}
-            {response?.isComplete && (
-              <span className="text-xs text-green-500">Complete</span>
-            )}
             <button
               onClick={onToggleMaximize}
               className="p-1.5 hover:bg-[var(--bg-primary)] rounded transition-colors"
