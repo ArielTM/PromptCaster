@@ -130,7 +130,7 @@ ${responsesText}
 
 ---
 
-Internally analyze each response for accuracy, completeness, clarity, and helpfulness. Then provide a single consolidated answer that combines the best elements from all responses. Do not include your analysis in the output—only provide the final synthesized answer.`;
+Analyze each response for accuracy, completeness, clarity, and helpfulness. You may include your reasoning and critical thinking. Then provide a final consolidated answer that combines the best elements from all responses. Always end with a clear "## Final Answer" section containing the synthesized response.`;
   };
 
   // Watch for judge response to reset judging state
