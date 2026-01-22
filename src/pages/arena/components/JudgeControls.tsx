@@ -34,7 +34,7 @@ export default function JudgeControls({
       <button
         onClick={onSendToJudge}
         disabled={!canJudge || isJudging}
-        className="px-3 py-1.5 text-sm rounded-lg bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-3 text-sm rounded-lg bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isJudging ? (
           <span className="flex items-center gap-1">
