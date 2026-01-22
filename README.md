@@ -6,6 +6,8 @@ Tired of switching between AI chatbot tabs? PromptCaster lets you query all four
 
 Just log into your free AI accounts in Chrome — that's it! No API keys, no subscriptions, no extra setup.
 
+**Why compare?** No single AI has all the answers. Each model has different strengths, biases, and blind spots. By comparing responses side-by-side, you can spot inconsistencies, verify facts, and make better decisions.
+
 ### Features
 
 - **One Prompt, Four Answers** — Type once, send to all AI chatbots simultaneously
