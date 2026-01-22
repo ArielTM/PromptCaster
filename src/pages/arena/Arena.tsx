@@ -134,13 +134,13 @@ export default function Arena() {
       })
       .join('\n\n---\n\n');
 
-    return `You are a judge evaluating responses from different AI assistants. Your task is to synthesize the best answer from the responses below.
+    return `Below are responses from different AI assistants to the same question.
 
 ${responsesText}
 
 ---
 
-Analyze each response for accuracy, completeness, clarity, and helpfulness. You may include your reasoning and critical thinking. Then provide a final consolidated answer that combines the best elements from all responses. Always end with a clear "## Final Answer" section containing the synthesized response.`;
+Synthesize the best answer by combining the most accurate, complete, and helpful elements from all responses above. You may include brief reasoning. End with a clear "## Final Answer" section.`;
   };
 
   // Watch for judge response to reset judging state
