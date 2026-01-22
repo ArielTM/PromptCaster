@@ -5,14 +5,11 @@ import { getSettings } from '@/lib/storage';
 import { LLM_CONFIGS } from '@/lib/llm-config';
 import LLMPanel from './components/LLMPanel';
 import PromptBar from './components/PromptBar';
-import JudgeControls from './components/JudgeControls';
-import ResponseCard from './components/ResponseCard';
 
 export default function Arena() {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [responses, setResponses] = useState<Record<string, LLMResponse>>({});
   const [isJudgeMode, setIsJudgeMode] = useState(false);
-  const [judgeVerdict, setJudgeVerdict] = useState<string | null>(null);
   const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
 
   useEffect(() => {
@@ -44,7 +41,6 @@ export default function Arena() {
   const handleSendPrompt = useCallback(
     async (prompt: string) => {
       setResponses({});
-      setJudgeVerdict(null);
 
       // Send prompt to all iframe content scripts
       for (const llmId of enabledLLMs) {
@@ -139,57 +135,15 @@ Please provide:
 2. Your verdict on which response is best and why`;
   };
 
-  // Watch for judge response
+  // Watch for judge response to reset judging state
   useEffect(() => {
     if (isJudgeMode && settings.judgeId && responses[settings.judgeId]?.isComplete) {
-      setJudgeVerdict(responses[settings.judgeId].text);
       setIsJudgeMode(false);
     }
   }, [isJudgeMode, settings.judgeId, responses]);
 
   return (
     <div className="flex flex-col h-screen bg-[var(--bg-primary)]">
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-color)]">
-        <h1 className="text-lg font-semibold">PromptCaster Arena</h1>
-        <div className="flex items-center gap-2">
-          <JudgeControls
-            judgeId={settings.judgeId}
-            enabledLLMs={enabledLLMs}
-            onSendToJudge={handleSendToJudge}
-            hasResponses={Object.values(responses).some((r) => r.isComplete)}
-            isJudging={isJudgeMode}
-          />
-          <a
-            href={chrome.runtime.getURL('src/pages/options/index.html')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 hover:bg-[var(--bg-secondary)] rounded-lg transition-colors"
-            title="Settings"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </a>
-        </div>
-      </header>
-
       {/* LLM Panels */}
       <main
         className="flex-1 grid gap-1 p-1 overflow-hidden"
@@ -211,19 +165,16 @@ Please provide:
         ))}
       </main>
 
-      {/* Judge Verdict */}
-      {judgeVerdict && (
-        <div className="border-t border-[var(--border-color)] p-4 bg-[var(--bg-secondary)]">
-          <ResponseCard
-            title="Judge's Verdict"
-            text={judgeVerdict}
-            onClose={() => setJudgeVerdict(null)}
-          />
-        </div>
-      )}
-
       {/* Prompt Bar */}
-      <PromptBar onSend={handleSendPrompt} />
+      <PromptBar
+        onSend={handleSendPrompt}
+        judgeId={settings.judgeId}
+        enabledLLMs={enabledLLMs}
+        onSendToJudge={handleSendToJudge}
+        hasResponses={Object.values(responses).some((r) => r.isComplete)}
+        isJudging={isJudgeMode}
+        settingsUrl={chrome.runtime.getURL('src/pages/options/index.html')}
+      />
     </div>
   );
 }
