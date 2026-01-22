@@ -37,7 +37,9 @@ export default function Arena() {
     return () => chrome.runtime.onMessage.removeListener(handleMessage);
   }, []);
 
-  const enabledLLMs = settings.enabledLLMs.filter((id) => LLM_CONFIGS[id]);
+  const enabledLLMs = settings.llmOrder.filter(
+    (id) => settings.enabledLLMs.includes(id) && LLM_CONFIGS[id]
+  );
 
   const handleSendPrompt = useCallback(
     async (prompt: string) => {
