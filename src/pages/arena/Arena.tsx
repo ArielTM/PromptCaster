@@ -75,6 +75,16 @@ export default function Arena() {
     [enabledLLMs]
   );
 
+  const handleNewChat = useCallback(() => {
+    setResponses({});
+    for (const llmId of enabledLLMs) {
+      const iframe = iframeRefs.current[llmId];
+      if (iframe) {
+        iframe.src = iframe.src;
+      }
+    }
+  }, [enabledLLMs]);
+
   const handleSendToJudge = useCallback(async () => {
     if (!settings.judgeId) return;
 
@@ -166,6 +176,7 @@ Analyze each response for accuracy, completeness, clarity, and helpfulness. You 
       {/* Prompt Bar */}
       <PromptBar
         onSend={handleSendPrompt}
+        onNewChat={handleNewChat}
         judgeId={settings.judgeId}
         enabledLLMs={enabledLLMs}
         onSendToJudge={handleSendToJudge}

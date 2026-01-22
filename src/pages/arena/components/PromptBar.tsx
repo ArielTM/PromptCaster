@@ -3,6 +3,7 @@ import JudgeControls from './JudgeControls';
 
 interface PromptBarProps {
   onSend: (prompt: string) => void;
+  onNewChat: () => void;
   judgeId: string | null;
   enabledLLMs: string[];
   onSendToJudge: () => void;
@@ -11,8 +12,11 @@ interface PromptBarProps {
   settingsUrl: string;
 }
 
+const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+
 export default function PromptBar({
   onSend,
+  onNewChat,
   judgeId,
   enabledLLMs,
   onSendToJudge,
@@ -49,9 +53,36 @@ export default function PromptBar({
     textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
   }, [prompt]);
 
+  // Global keyboard shortcut for New Chat (Cmd/Ctrl+Shift+O)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const modifier = isMac ? e.metaKey : e.ctrlKey;
+      if (modifier && e.shiftKey && e.key.toLowerCase() === 'o') {
+        e.preventDefault();
+        onNewChat();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [onNewChat]);
+
   return (
     <div className="border-t border-[var(--border-color)] px-4 py-3 bg-[var(--bg-secondary)]">
       <div className="flex gap-3 items-center">
+        <button
+          onClick={onNewChat}
+          className="p-3 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+          title={`New Chat (${isMac ? '⌘⇧O' : 'Ctrl+Shift+O'})`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+        </button>
         <JudgeControls
           judgeId={judgeId}
           enabledLLMs={enabledLLMs}
