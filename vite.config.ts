@@ -21,7 +21,6 @@ export default defineConfig({
       input: {
         arena: resolve(__dirname, 'src/pages/arena/index.html'),
         options: resolve(__dirname, 'src/pages/options/index.html'),
-        popup: resolve(__dirname, 'src/pages/popup/index.html'),
       },
     },
   },
