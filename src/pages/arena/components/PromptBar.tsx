@@ -17,7 +17,7 @@ export default function PromptBar({ onSend }: PromptBarProps) {
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         handleSend();
       }
@@ -43,7 +43,7 @@ export default function PromptBar({ onSend }: PromptBarProps) {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Enter your prompt... (Ctrl+Enter to send)"
+            placeholder="Enter your prompt... (Shift+Enter for new line)"
             className="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-transparent"
             rows={1}
           />
