@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# PromptCaster
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Compare ChatGPT, Claude, Gemini & Perplexity side-by-side in one interface.**
 
-Currently, two official plugins are available:
+A Chrome extension that lets you send the same prompt to multiple AI chatbots simultaneously and compare their responses. Use Judge mode to have one LLM synthesize the best answer from all responses.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Side-by-side comparison** - View responses from ChatGPT, Claude, Gemini, and Perplexity in real-time
+- **Judge mode** - Select any LLM as a judge to synthesize the best response from all models
+- **Maximize panels** - Focus on a single LLM response with one click
+- **Customizable layout** - Enable/disable LLMs and reorder panels in settings
+- **Theme support** - Light, dark, and system-based themes
+- **PWA support** - Install as a standalone app via GitHub Pages
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Installation
 
-## Expanding the ESLint configuration
+### From source
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone this repository
+2. Install dependencies and build:
+   ```bash
+   pnpm install
+   pnpm build
+   ```
+3. Open Chrome and navigate to `chrome://extensions`
+4. Enable **Developer mode** (toggle in top-right)
+5. Click **Load unpacked** and select the `dist` folder
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Quick Start
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Click the PromptCaster extension icon to open the Arena
+2. Enter your prompt in the text field at the bottom
+3. Press **Enter** to send to all enabled LLMs
+4. Compare responses as they stream in
+5. (Optional) Click the **Judge** button to synthesize the best response
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Enter` | Send prompt |
+| `Shift+Enter` | New line |
+| `Cmd/Ctrl+Shift+O` | New chat |
+| `Escape` | Exit maximized view |
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm
+
+### Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server with hot reload
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Lint code
+pnpm lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Loading in Chrome
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Run `pnpm build`
+2. Navigate to `chrome://extensions`
+3. Enable **Developer mode**
+4. Click **Load unpacked** and select the `dist` folder
+5. Click the extension icon to open the Arena
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Project Structure
+
 ```
+src/
+├── background/     # Service worker
+├── content/        # Content scripts for LLM sites
+├── pages/
+│   ├── arena/      # Main comparison interface
+│   └── options/    # Settings page
+└── types/          # TypeScript types
+```
+
+## Supported LLMs
+
+| LLM | URL |
+|-----|-----|
+| ChatGPT | chatgpt.com |
+| Claude | claude.ai |
+| Gemini | gemini.google.com |
+| Perplexity | perplexity.ai |
+
+## License
+
+MIT
