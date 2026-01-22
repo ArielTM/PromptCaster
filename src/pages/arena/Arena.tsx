@@ -124,15 +124,13 @@ export default function Arena() {
       })
       .join('\n\n---\n\n');
 
-    return `You are a judge evaluating responses from different AI assistants. Compare the following responses and determine which one is best. Consider accuracy, helpfulness, clarity, and completeness.
+    return `You are a judge evaluating responses from different AI assistants. Your task is to synthesize the best answer from the responses below.
 
 ${responsesText}
 
 ---
 
-Please provide:
-1. A brief analysis of each response's strengths and weaknesses
-2. Your verdict on which response is best and why`;
+Internally analyze each response for accuracy, completeness, clarity, and helpfulness. Then provide a single consolidated answer that combines the best elements from all responses. Do not include your analysis in the output—only provide the final synthesized answer.`;
   };
 
   // Watch for judge response to reset judging state
