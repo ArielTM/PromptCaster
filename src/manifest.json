@@ -16,7 +16,7 @@
     "https://claude.ai/*",
     "https://gemini.google.com/*",
     "https://www.perplexity.ai/*",
-    "https://YOUR_USERNAME.github.io/*"
+    "https://arieltm.github.io/*"
   ],
   "declarative_net_request": {
     "rule_resources": [
@@ -63,7 +63,7 @@
   "web_accessible_resources": [
     {
       "resources": ["src/pages/arena/index.html"],
-      "matches": ["https://YOUR_USERNAME.github.io/*"]
+      "matches": ["https://arieltm.github.io/*"]
     }
   ]
 }

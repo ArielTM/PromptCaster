@@ -9,7 +9,7 @@
       }
     },
     "condition": {
-      "urlFilter": "||YOUR_USERNAME.github.io/promptcaster/app*",
+      "urlFilter": "||arieltm.github.io/promptcaster/app*",
       "resourceTypes": ["main_frame"],
       "initiatorDomains": []
     }
