@@ -1,31 +1,64 @@
 # PromptCaster
 
-**Compare ChatGPT, Claude, Gemini & Perplexity side-by-side in one interface.**
+**Compare ChatGPT, Claude, Gemini & Perplexity side-by-side — No API Keys Needed**
 
-A Chrome extension that lets you send the same prompt to multiple AI chatbots simultaneously and compare their responses. Use Judge mode to have one LLM synthesize the best answer from all responses.
+Tired of switching between AI chatbot tabs? PromptCaster lets you query all four AI assistants with a single prompt and compare their responses in real-time.
 
-## Features
+Just log into your free AI accounts in Chrome — that's it! No API keys, no subscriptions, no extra setup.
 
-- **Side-by-side comparison** - View responses from ChatGPT, Claude, Gemini, and Perplexity in real-time
-- **Judge mode** - Select any LLM as a judge to synthesize the best response from all models
-- **Maximize panels** - Focus on a single LLM response with one click
-- **Customizable layout** - Enable/disable LLMs and reorder panels in settings
-- **Theme support** - Light, dark, and system-based themes
-- **PWA support** - Install as a standalone app via GitHub Pages
+### Features
+
+- **One Prompt, Four Answers** — Type once, send to all AI chatbots simultaneously
+- **Real-Time Streaming** — Watch responses appear in parallel as they're generated
+- **Side-by-Side Comparison** — Clean grid layout shows all responses at once
+- **Judge Mode** — Let one AI synthesize the best answer from all responses
+- **Customizable** — Enable/disable models, reorder panels, choose your theme
+
+### Supported AI Models
+
+- ChatGPT (OpenAI)
+- Claude (Anthropic)
+- Gemini (Google)
+- Perplexity AI
+
+### Judge Mode
+
+Can't decide which AI gave the best answer? Use Judge Mode to have one model analyze all responses and create a synthesized "best answer" combining the strongest elements from each.
+
+### Perfect For
+
+- Researchers comparing AI capabilities
+- Students fact-checking AI responses
+- Writers seeking diverse perspectives
+- Developers testing prompt variations
+- Anyone who wants the best AI answer
+
+### Privacy
+
+- No API keys required — uses your free AI chat accounts
+- Works with your existing browser logins
+- No data collection — everything stays on your device
+- Open source — inspect the code yourself
+
+---
 
 ## Installation
 
-### From source
+### Chrome Web Store
+
+*Coming soon*
+
+### From Source
 
 1. Clone this repository
 2. Install dependencies and build:
    ```bash
-   pnpm install
-   pnpm build
+   npm install
+   npm run build
    ```
-3. Open Chrome and navigate to `chrome://extensions`
-4. Enable **Developer mode** (toggle in top-right)
-5. Click **Load unpacked** and select the `dist` folder
+3. Open Chrome → `chrome://extensions`
+4. Enable **Developer mode**
+5. Click **Load unpacked** → select the `dist` folder
 
 ## Quick Start
 
@@ -33,7 +66,7 @@ A Chrome extension that lets you send the same prompt to multiple AI chatbots si
 2. Enter your prompt in the text field at the bottom
 3. Press **Enter** to send to all enabled LLMs
 4. Compare responses as they stream in
-5. (Optional) Click the **Judge** button to synthesize the best response
+5. (Optional) Click **Judge** to synthesize the best response
 
 ## Keyboard Shortcuts
 
@@ -46,34 +79,13 @@ A Chrome extension that lets you send the same prompt to multiple AI chatbots si
 
 ## Development
 
-### Prerequisites
-
-- Node.js 18+
-- pnpm
-
-### Setup
-
 ```bash
-# Install dependencies
-pnpm install
-
-# Start development server with hot reload
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Lint code
-pnpm lint
+npm install      # Install dependencies
+npm run dev      # Start dev server with hot reload
+npm run build    # Build for production
+npm run package  # Build and create ZIP for Chrome Web Store
+npm run lint     # Lint code
 ```
-
-### Loading in Chrome
-
-1. Run `pnpm build`
-2. Navigate to `chrome://extensions`
-3. Enable **Developer mode**
-4. Click **Load unpacked** and select the `dist` folder
-5. Click the extension icon to open the Arena
 
 ### Project Structure
 
@@ -84,17 +96,8 @@ src/
 ├── pages/
 │   ├── arena/      # Main comparison interface
 │   └── options/    # Settings page
-└── types/          # TypeScript types
+└── lib/            # Shared utilities and config
 ```
-
-## Supported LLMs
-
-| LLM | URL |
-|-----|-----|
-| ChatGPT | chatgpt.com |
-| Claude | claude.ai |
-| Gemini | gemini.google.com |
-| Perplexity | perplexity.ai |
 
 ## License
 
