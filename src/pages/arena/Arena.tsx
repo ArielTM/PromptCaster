@@ -10,6 +10,7 @@ export default function Arena() {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [responses, setResponses] = useState<Record<string, LLMResponse>>({});
   const [isJudgeMode, setIsJudgeMode] = useState(false);
+  const [maximizedLlmId, setMaximizedLlmId] = useState<string | null>(null);
   const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
 
   useEffect(() => {
@@ -85,6 +86,10 @@ export default function Arena() {
     }
   }, [enabledLLMs]);
 
+  const handleToggleMaximize = useCallback((llmId: string) => {
+    setMaximizedLlmId((prev) => (prev === llmId ? null : llmId));
+  }, []);
+
   const handleSendToJudge = useCallback(async () => {
     if (!settings.judgeId) return;
 
@@ -150,13 +155,26 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
     }
   }, [isJudgeMode, settings.judgeId, responses]);
 
+  // Handle Escape key to exit maximized mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && maximizedLlmId) {
+        setMaximizedLlmId(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [maximizedLlmId]);
+
   return (
     <div className="flex flex-col h-screen bg-[var(--bg-primary)]">
       {/* LLM Panels */}
       <main
-        className="flex-1 grid gap-1 p-1 overflow-hidden"
+        className="flex-1 grid gap-1 p-1 overflow-hidden transition-all duration-300"
         style={{
-          gridTemplateColumns: `repeat(${enabledLLMs.length}, 1fr)`,
+          gridTemplateColumns: maximizedLlmId
+            ? '1fr'
+            : `repeat(${enabledLLMs.length}, 1fr)`,
           gridTemplateRows: '1fr',
         }}
       >
@@ -166,6 +184,9 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
             llmId={llmId}
             response={responses[llmId]}
             isJudge={settings.judgeId === llmId}
+            isMaximized={maximizedLlmId === llmId}
+            isHidden={maximizedLlmId !== null && maximizedLlmId !== llmId}
+            onToggleMaximize={() => handleToggleMaximize(llmId)}
             ref={(el) => {
               iframeRefs.current[llmId] = el;
             }}
