@@ -40,7 +40,6 @@ export default function Arena() {
   }, []);
 
   const enabledLLMs = settings.enabledLLMs.filter((id) => LLM_CONFIGS[id]);
-  const gridCols = enabledLLMs.length <= 2 ? enabledLLMs.length : 2;
 
   const handleSendPrompt = useCallback(
     async (prompt: string) => {
@@ -195,8 +194,8 @@ Please provide:
       <main
         className="flex-1 grid gap-1 p-1 overflow-hidden"
         style={{
-          gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-          gridTemplateRows: enabledLLMs.length > 2 ? 'repeat(2, 1fr)' : '1fr',
+          gridTemplateColumns: `repeat(${enabledLLMs.length}, 1fr)`,
+          gridTemplateRows: '1fr',
         }}
       >
         {enabledLLMs.map((llmId) => (
