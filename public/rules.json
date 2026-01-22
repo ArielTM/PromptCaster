@@ -10,8 +10,7 @@
     },
     "condition": {
       "urlFilter": "||arieltm.github.io/promptcaster/app*",
-      "resourceTypes": ["main_frame"],
-      "initiatorDomains": []
+      "resourceTypes": ["main_frame"]
     }
   }
 ]
