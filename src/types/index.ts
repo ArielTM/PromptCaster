@@ -23,6 +23,7 @@ export interface AppSettings {
   llmOrder: string[];
   judgeId: string | null;
   theme: 'light' | 'dark' | 'system';
+  autoMaximizeJudge: boolean;
 }
 
 export interface Message {
@@ -45,4 +46,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   llmOrder: ['chatgpt', 'claude', 'gemini', 'perplexity'],
   judgeId: null,
   theme: 'system',
+  autoMaximizeJudge: false,
 };

@@ -97,6 +97,10 @@ export default function Arena() {
 
     setIsJudgeMode(true);
 
+    if (settings.autoMaximizeJudge) {
+      setMaximizedLlmId(settings.judgeId);
+    }
+
     const nonJudgeResponses = Object.values(responses).filter(
       (r) => r.llmId !== settings.judgeId && r.isComplete
     );
@@ -131,7 +135,7 @@ export default function Arena() {
       console.error('Failed to send to judge:', err);
       setIsJudgeMode(false);
     }
-  }, [responses, settings.judgeId]);
+  }, [responses, settings.judgeId, settings.autoMaximizeJudge]);
 
   const formatJudgePrompt = (llmResponses: LLMResponse[]): string => {
     const responsesText = llmResponses
