@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>PromptCaster</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #1a1a2e;
+      color: white;
+      text-align: center;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    p {
+      color: #a0a0b0;
+      margin: 0;
+    }
+    .error {
+      display: none;
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 8px;
+      max-width: 400px;
+    }
+    .error.visible {
+      display: block;
+    }
+    .error p {
+      color: #fca5a5;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <p>Loading PromptCaster...</p>
+  <div id="error" class="error">
+    <p>
+      The PromptCaster extension doesn't appear to be installed or enabled.
+      Please install the extension and reload this page.
+    </p>
+  </div>
+  <script>
+    // If we're still here after 3 seconds, show error
+    // (extension should have redirected us by now)
+    setTimeout(() => {
+      document.getElementById('error').classList.add('visible');
+    }, 3000);
+  </script>
+</body>
+</html>

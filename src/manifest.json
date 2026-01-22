@@ -15,7 +15,8 @@
     "https://chatgpt.com/*",
     "https://claude.ai/*",
     "https://gemini.google.com/*",
-    "https://www.perplexity.ai/*"
+    "https://www.perplexity.ai/*",
+    "https://YOUR_USERNAME.github.io/*"
   ],
   "declarative_net_request": {
     "rule_resources": [
@@ -58,5 +59,11 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "options_page": "src/pages/options/index.html"
+  "options_page": "src/pages/options/index.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["src/pages/arena/index.html"],
+      "matches": ["https://YOUR_USERNAME.github.io/*"]
+    }
+  ]
 }

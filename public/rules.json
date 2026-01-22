@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": 10,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "extensionPath": "/src/pages/arena/index.html"
+      }
+    },
+    "condition": {
+      "urlFilter": "||YOUR_USERNAME.github.io/promptcaster/app*",
+      "resourceTypes": ["main_frame"],
+      "initiatorDomains": []
+    }
+  }
+]
