@@ -10,6 +10,7 @@ interface PromptBarProps {
   hasResponses: boolean;
   isJudging: boolean;
   settingsUrl: string;
+  onFilesSelected: (files: File[]) => void;
 }
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
@@ -23,9 +24,26 @@ export default function PromptBar({
   hasResponses,
   isJudging,
   settingsUrl,
+  onFilesSelected,
 }: PromptBarProps) {
   const [prompt, setPrompt] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileButtonClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length > 0) {
+        onFilesSelected(files);
+        e.target.value = '';
+      }
+    },
+    [onFilesSelected]
+  );
 
   const handleSend = useCallback(() => {
     const trimmed = prompt.trim();
@@ -90,6 +108,32 @@ export default function PromptBar({
           hasResponses={hasResponses}
           isJudging={isJudging}
         />
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <button
+          onClick={handleFileButtonClick}
+          className="p-3 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+          title="Attach files"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+            />
+          </svg>
+        </button>
         <div className="flex-1 relative">
           <textarea
             ref={textareaRef}

@@ -3,8 +3,11 @@ import type { AppSettings, LLMResponse, ResponsePayload } from '@/types';
 import { DEFAULT_SETTINGS } from '@/types';
 import { getSettings } from '@/lib/storage';
 import { LLM_CONFIGS } from '@/lib/llm-config';
+import { serializeFiles } from '@/lib/file-utils';
+import { useFileDrop } from '@/hooks/useFileDrop';
 import LLMPanel from './components/LLMPanel';
 import PromptBar from './components/PromptBar';
+import FileDropOverlay from './components/FileDropOverlay';
 
 export default function Arena() {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
@@ -172,8 +175,46 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [maximizedLlmId]);
 
+  const handleFilesSelected = useCallback(
+    async (files: File[]) => {
+      const serializedFiles = await serializeFiles(files);
+
+      for (const llmId of enabledLLMs) {
+        const iframe = iframeRefs.current[llmId];
+        if (!iframe?.contentWindow) continue;
+
+        try {
+          const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+          if (!tab?.id) continue;
+
+          const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id });
+          const config = LLM_CONFIGS[llmId];
+
+          const matchingFrame = frames?.find((f) =>
+            f.url.includes(new URL(config.url).hostname)
+          );
+
+          if (matchingFrame) {
+            await chrome.tabs.sendMessage(
+              tab.id,
+              { type: 'INJECT_FILES', payload: { files: serializedFiles } },
+              { frameId: matchingFrame.frameId }
+            );
+          }
+        } catch (err) {
+          console.error(`Failed to inject files to ${llmId}:`, err);
+        }
+      }
+    },
+    [enabledLLMs]
+  );
+
+  const { isDragging } = useFileDrop({ onFilesDropped: handleFilesSelected });
+
   return (
     <div className="flex flex-col h-screen bg-[var(--bg-primary)]">
+      <FileDropOverlay isVisible={isDragging} />
+
       {/* LLM Panels */}
       <main
         className="flex-1 grid gap-1 p-1 overflow-hidden transition-all duration-300"
@@ -210,6 +251,7 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
         hasResponses={Object.values(responses).some((r) => r.isComplete)}
         isJudging={isJudgeMode}
         settingsUrl={chrome.runtime.getURL('src/pages/options/index.html')}
+        onFilesSelected={handleFilesSelected}
       />
     </div>
   );

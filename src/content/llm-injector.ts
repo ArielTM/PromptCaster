@@ -1,5 +1,52 @@
-import type { Message, InjectPromptPayload } from '@/types';
+import type { Message, InjectPromptPayload, SerializedFile, InjectFilesPayload } from '@/types';
 import { LLM_CONFIGS } from '@/lib/llm-config';
+
+const deserializeFile = (serialized: SerializedFile): File => {
+  const binary = atob(serialized.data);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new File([bytes], serialized.name, {
+    type: serialized.type,
+    lastModified: serialized.lastModified,
+  });
+};
+
+const injectFiles = async (serializedFiles: SerializedFile[]): Promise<boolean> => {
+  const llmId = getCurrentLLMId();
+  if (!llmId) return false;
+
+  const files = serializedFiles.map(deserializeFile);
+  const dataTransfer = new DataTransfer();
+  files.forEach((file) => dataTransfer.items.add(file));
+
+  // Simulate native drag-and-drop sequence on document body
+  const dragEnterEvent = new DragEvent('dragenter', {
+    bubbles: true,
+    cancelable: true,
+    dataTransfer,
+  });
+
+  const dragOverEvent = new DragEvent('dragover', {
+    bubbles: true,
+    cancelable: true,
+    dataTransfer,
+  });
+
+  const dropEvent = new DragEvent('drop', {
+    bubbles: true,
+    cancelable: true,
+    dataTransfer,
+  });
+
+  document.body.dispatchEvent(dragEnterEvent);
+  document.body.dispatchEvent(dragOverEvent);
+  document.body.dispatchEvent(dropEvent);
+
+  console.log(`PromptCaster: Simulated file drop for ${llmId}`, files.map((f) => f.name));
+  return true;
+};
 
 const getCurrentLLMId = (): string | null => {
   const hostname = window.location.hostname;
@@ -178,6 +225,14 @@ chrome.runtime.onMessage.addListener(
         text: extractResponse(),
         isComplete: isResponseComplete(),
         llmId: getCurrentLLMId(),
+      });
+      return true;
+    }
+
+    if (message.type === 'INJECT_FILES') {
+      const payload = message.payload as InjectFilesPayload;
+      injectFiles(payload.files).then((success) => {
+        sendResponse({ success });
       });
       return true;
     }

@@ -27,12 +27,24 @@ export interface AppSettings {
 }
 
 export interface Message {
-  type: 'INJECT_PROMPT' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING';
+  type: 'INJECT_PROMPT' | 'INJECT_FILES' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING';
   payload?: unknown;
 }
 
 export interface InjectPromptPayload {
   prompt: string;
+}
+
+export interface SerializedFile {
+  name: string;
+  type: string;
+  size: number;
+  data: string; // Base64 encoded
+  lastModified: number;
+}
+
+export interface InjectFilesPayload {
+  files: SerializedFile[];
 }
 
 export interface ResponsePayload {
