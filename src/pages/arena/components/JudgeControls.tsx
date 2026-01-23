@@ -2,7 +2,7 @@ import { LLM_CONFIGS } from '@/lib/llm-config';
 
 interface JudgeControlsProps {
   judgeId: string | null;
-  enabledLLMs: string[];
+  enabledLLMCount: number;
   onSendToJudge: () => void;
   hasResponses: boolean;
   isJudging: boolean;
@@ -10,13 +10,13 @@ interface JudgeControlsProps {
 
 export default function JudgeControls({
   judgeId,
-  enabledLLMs,
+  enabledLLMCount,
   onSendToJudge,
   hasResponses,
   isJudging,
 }: JudgeControlsProps) {
-  const judgeConfig = judgeId ? LLM_CONFIGS[judgeId] : null;
-  const canJudge = judgeId && hasResponses && enabledLLMs.length >= 2;
+  const judgeName = judgeId ? LLM_CONFIGS[judgeId]?.name : null;
+  const canJudge = judgeId && hasResponses && enabledLLMCount >= 2;
 
   if (!judgeId) {
     return (
@@ -59,7 +59,7 @@ export default function JudgeControls({
           />
         </svg>
       )}
-      {judgeConfig?.name}
+      {judgeName}
     </button>
   );
 }

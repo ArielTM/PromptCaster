@@ -1,10 +1,8 @@
 import { forwardRef, useState } from 'react';
-import type { LLMResponse } from '@/types';
 import { LLM_CONFIGS } from '@/lib/llm-config';
 
 interface LLMPanelProps {
   llmId: string;
-  response?: LLMResponse;
   isJudge: boolean;
   isMaximized: boolean;
   isHidden: boolean;
@@ -12,7 +10,7 @@ interface LLMPanelProps {
 }
 
 const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
-  ({ llmId, response, isJudge, isMaximized, isHidden, onToggleMaximize }, ref) => {
+  ({ llmId, isJudge, isMaximized, isHidden, onToggleMaximize }, ref) => {
     const [isLoading, setIsLoading] = useState(true);
     const config = LLM_CONFIGS[llmId];
 

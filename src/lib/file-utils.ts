@@ -22,15 +22,3 @@ export async function serializeFile(file: File): Promise<SerializedFile> {
 export async function serializeFiles(files: File[]): Promise<SerializedFile[]> {
   return Promise.all(files.map(serializeFile));
 }
-
-export function deserializeFile(serialized: SerializedFile): File {
-  const binary = atob(serialized.data);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new File([bytes], serialized.name, {
-    type: serialized.type,
-    lastModified: serialized.lastModified,
-  });
-}

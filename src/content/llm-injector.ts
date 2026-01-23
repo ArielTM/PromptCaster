@@ -1,18 +1,6 @@
 import type { Message, InjectPromptPayload, SerializedFile, InjectFilesPayload } from '@/types';
 import { LLM_CONFIGS } from '@/lib/llm-config';
 
-const deserializeFile = (serialized: SerializedFile): File => {
-  const binary = atob(serialized.data);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new File([bytes], serialized.name, {
-    type: serialized.type,
-    lastModified: serialized.lastModified,
-  });
-};
-
 const injectFiles = async (serializedFiles: SerializedFile[]): Promise<boolean> => {
   const llmId = getCurrentLLMId();
   if (!llmId) return false;

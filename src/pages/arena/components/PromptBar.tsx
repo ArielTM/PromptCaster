@@ -5,7 +5,7 @@ interface PromptBarProps {
   onSend: (prompt: string) => void;
   onNewChat: () => void;
   judgeId: string | null;
-  enabledLLMs: string[];
+  enabledLLMCount: number;
   onSendToJudge: () => void;
   hasResponses: boolean;
   isJudging: boolean;
@@ -13,13 +13,13 @@ interface PromptBarProps {
   onFilesSelected: (files: File[]) => void;
 }
 
-const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
 
 export default function PromptBar({
   onSend,
   onNewChat,
   judgeId,
-  enabledLLMs,
+  enabledLLMCount,
   onSendToJudge,
   hasResponses,
   isJudging,
@@ -103,7 +103,7 @@ export default function PromptBar({
         </button>
         <JudgeControls
           judgeId={judgeId}
-          enabledLLMs={enabledLLMs}
+          enabledLLMCount={enabledLLMCount}
           onSendToJudge={onSendToJudge}
           hasResponses={hasResponses}
           isJudging={isJudging}

@@ -229,7 +229,6 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
           <LLMPanel
             key={llmId}
             llmId={llmId}
-            response={responses[llmId]}
             isJudge={settings.judgeId === llmId}
             isMaximized={maximizedLlmId === llmId}
             isHidden={maximizedLlmId !== null && maximizedLlmId !== llmId}
@@ -246,7 +245,7 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
         onSend={handleSendPrompt}
         onNewChat={handleNewChat}
         judgeId={settings.judgeId}
-        enabledLLMs={enabledLLMs}
+        enabledLLMCount={enabledLLMs.length}
         onSendToJudge={handleSendToJudge}
         hasResponses={Object.values(responses).some((r) => r.isComplete)}
         isJudging={isJudgeMode}
