@@ -17,35 +17,28 @@ const injectFiles = async (serializedFiles: SerializedFile[]): Promise<boolean> 
   const llmId = getCurrentLLMId();
   if (!llmId) return false;
 
-  const files = serializedFiles.map(deserializeFile);
-  const dataTransfer = new DataTransfer();
-  files.forEach((file) => dataTransfer.items.add(file));
+  const filesData = serializedFiles.map(s => ({
+    name: s.name,
+    type: s.type,
+    data: s.data,
+    lastModified: s.lastModified,
+  }));
 
-  // Simulate native drag-and-drop sequence on document body
-  const dragEnterEvent = new DragEvent('dragenter', {
-    bubbles: true,
-    cancelable: true,
-    dataTransfer,
+  // Send to service worker which will execute in main world via chrome.scripting
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { type: 'EXECUTE_FILE_INJECTION', filesData },
+      (response) => {
+        if (response?.success) {
+          console.log(`PromptCaster: File injection succeeded for ${llmId}`, response);
+          resolve(true);
+        } else {
+          console.warn(`PromptCaster: File injection failed for ${llmId}`, response);
+          resolve(false);
+        }
+      }
+    );
   });
-
-  const dragOverEvent = new DragEvent('dragover', {
-    bubbles: true,
-    cancelable: true,
-    dataTransfer,
-  });
-
-  const dropEvent = new DragEvent('drop', {
-    bubbles: true,
-    cancelable: true,
-    dataTransfer,
-  });
-
-  document.body.dispatchEvent(dragEnterEvent);
-  document.body.dispatchEvent(dragOverEvent);
-  document.body.dispatchEvent(dropEvent);
-
-  console.log(`PromptCaster: Simulated file drop for ${llmId}`, files.map((f) => f.name));
-  return true;
 };
 
 const getCurrentLLMId = (): string | null => {

@@ -27,7 +27,7 @@ export interface AppSettings {
 }
 
 export interface Message {
-  type: 'INJECT_PROMPT' | 'INJECT_FILES' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING';
+  type: 'INJECT_PROMPT' | 'INJECT_FILES' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING' | 'EXECUTE_FILE_INJECTION';
   payload?: unknown;
 }
 
