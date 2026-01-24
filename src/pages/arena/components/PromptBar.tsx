@@ -85,14 +85,14 @@ export default function PromptBar({
   }, [onNewChat]);
 
   return (
-    <div className="border-t border-[var(--border-color)] px-4 py-3 bg-[var(--bg-secondary)]">
-      <div className="flex gap-3 items-center">
+    <div className="border-t border-[var(--border-color)] px-3 py-2 bg-[var(--bg-secondary)]">
+      <div className="flex gap-2 items-center">
         <button
           onClick={onNewChat}
-          className="p-3 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
           title={`New Chat (${isMac ? '⌘⇧O' : 'Ctrl+Shift+O'})`}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -117,11 +117,11 @@ export default function PromptBar({
         />
         <button
           onClick={handleFileButtonClick}
-          className="p-3 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
           title="Attach files"
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -141,14 +141,14 @@ export default function PromptBar({
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Enter your prompt... (Shift+Enter for new line)"
-            className="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-transparent"
+            className="w-full px-3 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-transparent"
             rows={1}
           />
         </div>
         <button
           onClick={handleSend}
           disabled={!prompt.trim()}
-          className="px-6 py-3 rounded-lg bg-[var(--accent-color)] text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 rounded-lg bg-[var(--accent-color)] text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span className="flex items-center gap-2">
             Send
@@ -171,11 +171,11 @@ export default function PromptBar({
           href={settingsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-3 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--bg-primary)] rounded-lg transition-colors"
           title="Settings"
         >
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
