@@ -20,13 +20,13 @@ const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
       <div className={`relative flex flex-col rounded-lg border border-[var(--border-color)] overflow-hidden bg-[var(--bg-secondary)] ${isHidden ? 'hidden' : ''}`}>
         {/* Header */}
         <div
-          className="flex items-center justify-between px-3 py-2 border-b border-[var(--border-color)]"
-          style={{ borderTopColor: config.color, borderTopWidth: 3 }}
+          className="flex items-center justify-between px-2 py-1 border-b border-[var(--border-color)]"
+          style={{ borderTopColor: config.color, borderTopWidth: 2 }}
         >
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm">{config.name}</span>
+            <span className="font-medium text-xs">{config.name}</span>
             {isJudge && (
-              <span className="p-1 bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded" title="Judge">
+              <span className="px-1 py-0.5 bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded" title="Judge">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -41,7 +41,7 @@ const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
           <div className="flex items-center gap-2">
             <button
               onClick={onToggleMaximize}
-              className="p-1.5 hover:bg-[var(--bg-primary)] rounded transition-colors"
+              className="p-1 hover:bg-[var(--bg-primary)] rounded transition-colors"
               title={isMaximized ? 'Minimize (Esc)' : 'Maximize'}
             >
               {isMaximized ? (
