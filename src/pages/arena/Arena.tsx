@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { AppSettings, LLMResponse, ResponsePayload } from '@/types';
+import type { AppSettings, LLMResponse, ResponsePayload, ConversationMessage, ConversationPayload } from '@/types';
 import { DEFAULT_SETTINGS } from '@/types';
 import { getSettings } from '@/lib/storage';
 import { LLM_CONFIGS } from '@/lib/llm-config';
@@ -114,15 +114,40 @@ export default function Arena() {
       return;
     }
 
-    const judgePrompt = formatJudgePrompt(nonJudgeResponses);
+    let conversations: Record<string, ConversationMessage[]> | undefined;
 
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab?.id) return;
 
       const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id });
-      const config = LLM_CONFIGS[settings.judgeId];
 
+      // Fetch full conversations if enabled
+      if (settings.judgeFullConversation) {
+        conversations = {};
+        for (const response of nonJudgeResponses) {
+          const config = LLM_CONFIGS[response.llmId];
+          const matchingFrame = frames?.find((f) =>
+            f.url.includes(new URL(config.url).hostname)
+          );
+
+          if (matchingFrame) {
+            const result = await chrome.tabs.sendMessage(
+              tab.id,
+              { type: 'GET_CONVERSATION' },
+              { frameId: matchingFrame.frameId }
+            ) as ConversationPayload;
+
+            if (result?.messages) {
+              conversations[response.llmId] = result.messages;
+            }
+          }
+        }
+      }
+
+      const judgePrompt = formatJudgePrompt(nonJudgeResponses, conversations);
+
+      const config = LLM_CONFIGS[settings.judgeId];
       const matchingFrame = frames?.find((f) =>
         f.url.includes(new URL(config.url).hostname)
       );
@@ -138,15 +163,35 @@ export default function Arena() {
       console.error('Failed to send to judge:', err);
       setIsJudgeMode(false);
     }
-  }, [responses, settings.judgeId, settings.autoMaximizeJudge]);
+  }, [responses, settings.judgeId, settings.autoMaximizeJudge, settings.judgeFullConversation]);
 
-  const formatJudgePrompt = (llmResponses: LLMResponse[]): string => {
-    const responsesText = llmResponses
-      .map((r) => {
-        const config = LLM_CONFIGS[r.llmId];
-        return `## ${config?.name || r.llmId}\n${r.text}`;
-      })
-      .join('\n\n---\n\n');
+  const formatJudgePrompt = (
+    llmResponses: LLMResponse[],
+    conversations?: Record<string, ConversationMessage[]>
+  ): string => {
+    let responsesText: string;
+
+    if (conversations) {
+      // Full conversation mode
+      responsesText = llmResponses
+        .map((r) => {
+          const config = LLM_CONFIGS[r.llmId];
+          const messages = conversations[r.llmId] || [];
+          const conversationText = messages
+            .map((msg) => `**${msg.role === 'user' ? 'User' : 'Assistant'}:** ${msg.content}`)
+            .join('\n\n');
+          return `## ${config?.name || r.llmId}\n\n${conversationText}`;
+        })
+        .join('\n\n---\n\n');
+    } else {
+      // Last response only mode
+      responsesText = llmResponses
+        .map((r) => {
+          const config = LLM_CONFIGS[r.llmId];
+          return `## ${config?.name || r.llmId}\n${r.text}`;
+        })
+        .join('\n\n---\n\n');
+    }
 
     return `Below are responses from different AI assistants to the same question.
 

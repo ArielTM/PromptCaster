@@ -1,4 +1,4 @@
-import type { Message, InjectPromptPayload, SerializedFile, InjectFilesPayload } from '@/types';
+import type { Message, InjectPromptPayload, SerializedFile, InjectFilesPayload, ConversationMessage } from '@/types';
 import { LLM_CONFIGS } from '@/lib/llm-config';
 
 const injectFiles = async (serializedFiles: SerializedFile[]): Promise<boolean> => {
@@ -94,9 +94,16 @@ const injectPrompt = async (prompt: string): Promise<boolean> => {
     (inputEl as HTMLTextAreaElement).value = prompt;
     inputEl.dispatchEvent(new Event('input', { bubbles: true }));
   } else if (inputEl.getAttribute('contenteditable') === 'true') {
-    // For contenteditable divs (Claude, etc.)
-    inputEl.textContent = prompt;
-    inputEl.dispatchEvent(new InputEvent('input', { bubbles: true, data: prompt }));
+    // For ProseMirror / contenteditable editors (ChatGPT, Claude, etc.)
+    inputEl.focus();
+    // Clear existing content
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(inputEl);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    // Insert text via execCommand which ProseMirror recognizes
+    document.execCommand('insertText', false, prompt);
   } else {
     // Try setting innerText as fallback
     (inputEl as HTMLElement).innerText = prompt;
@@ -128,6 +135,50 @@ const extractResponse = (): string => {
   // Get the last response container
   const lastContainer = containers[containers.length - 1];
   return lastContainer.textContent?.trim() || '';
+};
+
+const extractConversation = (): ConversationMessage[] => {
+  const llmId = getCurrentLLMId();
+  if (!llmId) return [];
+
+  const config = LLM_CONFIGS[llmId];
+  if (!config) return [];
+
+  const userSelector = config.selectors.userMessage;
+  const assistantSelector = config.selectors.responseContainer;
+
+  if (!userSelector) return [];
+
+  // Get all user and assistant messages
+  const userElements = Array.from(document.querySelectorAll(userSelector));
+  const assistantElements = Array.from(document.querySelectorAll(assistantSelector));
+
+  // Create a combined list with DOM order for interleaving
+  interface MessageElement {
+    role: 'user' | 'assistant';
+    element: Element;
+  }
+
+  const allMessages: MessageElement[] = [
+    ...userElements.map((el) => ({ role: 'user' as const, element: el })),
+    ...assistantElements.map((el) => ({ role: 'assistant' as const, element: el })),
+  ];
+
+  // Sort by DOM position
+  allMessages.sort((a, b) => {
+    const position = a.element.compareDocumentPosition(b.element);
+    if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+    if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+    return 0;
+  });
+
+  // Convert to ConversationMessage array
+  return allMessages
+    .map(({ role, element }) => ({
+      role,
+      content: element.textContent?.trim() || '',
+    }))
+    .filter((msg) => msg.content.length > 0);
 };
 
 const isResponseComplete = (): boolean => {
@@ -214,6 +265,14 @@ chrome.runtime.onMessage.addListener(
       const payload = message.payload as InjectFilesPayload;
       injectFiles(payload.files).then((success) => {
         sendResponse({ success });
+      });
+      return true;
+    }
+
+    if (message.type === 'GET_CONVERSATION') {
+      sendResponse({
+        messages: extractConversation(),
+        llmId: getCurrentLLMId(),
       });
       return true;
     }

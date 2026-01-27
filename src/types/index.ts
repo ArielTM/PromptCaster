@@ -7,6 +7,7 @@ export interface LLMConfig {
     sendButton: string;
     responseContainer: string;
     loadingIndicator?: string;
+    userMessage?: string;
   };
   color: string;
 }
@@ -24,11 +25,22 @@ export interface AppSettings {
   judgeId: string | null;
   theme: 'light' | 'dark' | 'system';
   autoMaximizeJudge: boolean;
+  judgeFullConversation: boolean;
 }
 
 export interface Message {
-  type: 'INJECT_PROMPT' | 'INJECT_FILES' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING' | 'EXECUTE_FILE_INJECTION';
+  type: 'INJECT_PROMPT' | 'INJECT_FILES' | 'GET_RESPONSE' | 'RESPONSE_UPDATE' | 'RESPONSE_COMPLETE' | 'PING' | 'EXECUTE_FILE_INJECTION' | 'GET_CONVERSATION';
   payload?: unknown;
+}
+
+export interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface ConversationPayload {
+  llmId: string;
+  messages: ConversationMessage[];
 }
 
 export interface InjectPromptPayload {
@@ -59,4 +71,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   judgeId: null,
   theme: 'system',
   autoMaximizeJudge: false,
+  judgeFullConversation: false,
 };

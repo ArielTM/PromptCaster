@@ -227,6 +227,24 @@ export default function Options() {
               </p>
             </div>
           </label>
+
+          <label className="flex items-start gap-3 mt-4 p-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)] cursor-pointer hover:border-[var(--accent-color)] transition-colors">
+            <input
+              type="checkbox"
+              checked={settings.judgeFullConversation}
+              onChange={(e) => {
+                setSettings((prev) => ({ ...prev, judgeFullConversation: e.target.checked }));
+                setSaved(false);
+              }}
+              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[var(--accent-color)] focus:ring-[var(--accent-color)]"
+            />
+            <div>
+              <span className="font-medium">Send full conversation to judge</span>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">
+                Include entire conversation history instead of just the last response
+              </p>
+            </div>
+          </label>
         </section>
 
         {/* Save Button */}
