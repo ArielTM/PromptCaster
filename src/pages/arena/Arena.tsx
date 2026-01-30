@@ -200,7 +200,7 @@ ${responsesText}
 
 ---
 
-Synthesize the best answer by combining the most accurate, complete, and helpful elements from all responses above. You may include brief reasoning. End with a clear "## Final Answer" section.`;
+Synthesize the best answer by combining the most accurate, complete, and helpful elements from all responses above. You may include brief reasoning. If any response references data, facts, or claims that you are not aware of, do not dismiss them — search the internet to verify before judging their accuracy. End with a clear "## Final Answer" section.`;
   };
 
   // Watch for judge response to reset judging state
