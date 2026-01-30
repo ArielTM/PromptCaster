@@ -95,7 +95,7 @@ const injectPrompt = async (prompt: string): Promise<boolean> => {
     inputEl.dispatchEvent(new Event('input', { bubbles: true }));
   } else if (inputEl.getAttribute('contenteditable') === 'true') {
     // For ProseMirror / contenteditable editors (ChatGPT, Claude, etc.)
-    inputEl.focus();
+    (inputEl as HTMLElement).focus();
     // Clear existing content
     const selection = window.getSelection();
     const range = document.createRange();

@@ -5,6 +5,7 @@ import { getSettings } from '@/lib/storage';
 import { LLM_CONFIGS } from '@/lib/llm-config';
 import { serializeFiles } from '@/lib/file-utils';
 import { useFileDrop } from '@/hooks/useFileDrop';
+import { useFilePaste } from '@/hooks/useFilePaste';
 import LLMPanel from './components/LLMPanel';
 import PromptBar from './components/PromptBar';
 import FileDropOverlay from './components/FileDropOverlay';
@@ -255,6 +256,7 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
   );
 
   const { isDragging } = useFileDrop({ onFilesDropped: handleFilesSelected });
+  useFilePaste({ onFilesPasted: handleFilesSelected });
 
   return (
     <div className="flex flex-col h-screen bg-[var(--bg-primary)]">
