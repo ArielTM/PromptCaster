@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "icons": "node scripts/generate-icons.mjs",
-    "package": "npm run build && cd dist && zip -r ../promptcaster-extension.zip . && cd .."
+    "package": "rm -rf dist && npm run build && cd dist && zip -r ../promptcaster-extension.zip . && cd .."
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
