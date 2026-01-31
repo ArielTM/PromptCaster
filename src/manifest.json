@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PromptCaster",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Compare LLM responses side-by-side and let a judge evaluate them",
   "permissions": [
     "storage",
@@ -41,7 +41,9 @@
         "https://gemini.google.com/*",
         "https://www.perplexity.ai/*"
       ],
-      "js": ["src/content/llm-injector.ts"],
+      "js": [
+        "src/content/llm-injector.ts"
+      ],
       "run_at": "document_idle",
       "all_frames": true
     }
@@ -63,8 +65,12 @@
   "options_page": "src/pages/options/index.html",
   "web_accessible_resources": [
     {
-      "resources": ["src/pages/arena/index.html"],
-      "matches": ["https://arieltm.github.io/*"]
+      "resources": [
+        "src/pages/arena/index.html"
+      ],
+      "matches": [
+        "https://arieltm.github.io/*"
+      ]
     }
   ]
 }
