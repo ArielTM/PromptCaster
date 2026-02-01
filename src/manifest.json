@@ -17,6 +17,7 @@
     "https://claude.ai/*",
     "https://gemini.google.com/*",
     "https://www.perplexity.ai/*",
+    "https://grok.com/*",
     "https://arieltm.github.io/*"
   ],
   "declarative_net_request": {
@@ -39,7 +40,8 @@
         "https://chatgpt.com/*",
         "https://claude.ai/*",
         "https://gemini.google.com/*",
-        "https://www.perplexity.ai/*"
+        "https://www.perplexity.ai/*",
+        "https://grok.com/*"
       ],
       "js": [
         "src/content/llm-injector.ts"

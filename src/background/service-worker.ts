@@ -8,6 +8,7 @@ async function registerHeaderModificationRules() {
     'claude.ai',
     'gemini.google.com',
     'perplexity.ai',
+    'grok.com',
   ];
 
   const rules: chrome.declarativeNetRequest.Rule[] = domains.map(

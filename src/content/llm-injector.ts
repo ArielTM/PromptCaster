@@ -44,6 +44,9 @@ const getCurrentLLMId = (): string | null => {
   if (hostname.includes('perplexity.ai')) {
     return 'perplexity';
   }
+  if (hostname.includes('grok.com')) {
+    return 'grok';
+  }
 
   return null;
 };
@@ -115,7 +118,13 @@ const injectPrompt = async (prompt: string): Promise<boolean> => {
 
   const sendBtn = await waitForElement(config.selectors.sendButton);
   if (sendBtn && !sendBtn.hasAttribute('disabled')) {
-    (sendBtn as HTMLButtonElement).click();
+    // Prefer form.requestSubmit() for submit buttons inside forms (e.g. Grok)
+    const form = (sendBtn as HTMLButtonElement).type === 'submit' && sendBtn.closest('form');
+    if (form) {
+      form.requestSubmit(sendBtn as HTMLButtonElement);
+    } else {
+      (sendBtn as HTMLButtonElement).click();
+    }
     return true;
   }
 

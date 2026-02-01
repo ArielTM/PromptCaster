@@ -53,6 +53,19 @@ export const LLM_CONFIGS: Record<string, LLMConfig> = {
     },
     color: '#20b8cd',
   },
+  grok: {
+    id: 'grok',
+    name: 'Grok',
+    url: 'https://grok.com/',
+    selectors: {
+      input: '[contenteditable="true"].ProseMirror',
+      sendButton: 'button[type="submit"][aria-label="Submit"]',
+      responseContainer: '.message-bubble:not(.bg-surface-l1)',
+      loadingIndicator: '',
+      userMessage: '.message-bubble.bg-surface-l1',
+    },
+    color: '#f97316',
+  },
 };
 
 export const getLLMConfig = (id: string): LLMConfig | undefined => {

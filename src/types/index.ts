@@ -66,8 +66,8 @@ export interface ResponsePayload {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  enabledLLMs: ['chatgpt', 'claude', 'gemini', 'perplexity'],
-  llmOrder: ['chatgpt', 'claude', 'gemini', 'perplexity'],
+  enabledLLMs: ['chatgpt', 'claude', 'gemini', 'perplexity', 'grok'],
+  llmOrder: ['chatgpt', 'claude', 'gemini', 'perplexity', 'grok'],
   judgeId: null,
   theme: 'system',
   autoMaximizeJudge: false,
