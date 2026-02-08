@@ -203,13 +203,13 @@ export default function Arena() {
         .join('\n\n---\n\n');
     }
 
-    return `Below are responses from different AI assistants to the same question.
+    return `Below are responses from different AI assistants to the same question. Your own answer is also part of the context above.
 
 ${responsesText}
 
 ---
 
-Synthesize the best answer by combining the most accurate, complete, and helpful elements from all responses above. You may include brief reasoning. If any response references data, facts, or claims that you are not aware of, do not dismiss them — search the internet to verify before judging their accuracy. End with a clear "## Final Answer" section.`;
+Synthesize the best answer by combining the most accurate, complete, and helpful elements from all responses above, including your own. You may include brief reasoning. Do not favor your own response — evaluate it with the same objectivity as the others. If any response references data, facts, or claims that you are not aware of, do not dismiss them — search the internet to verify before judging their accuracy. When responses contradict each other, search the internet to determine which claims are correct — do not assume any response, including your own, is more accurate than the others. End with a clear "## Final Answer" section.`;
   };
 
   // Watch for judge response to reset judging state
