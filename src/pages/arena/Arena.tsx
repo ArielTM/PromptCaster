@@ -91,12 +91,14 @@ export default function Arena() {
 
   const handleNewChat = useCallback(() => {
     setResponses({});
-    for (const llmId of enabledLLMs) {
-      const iframe = iframeRefs.current[llmId];
-      if (iframe) {
-        iframe.src = iframe.src;
+    chrome.runtime.sendMessage({ type: 'CLEAR_SERVICE_WORKERS' }, () => {
+      for (const llmId of enabledLLMs) {
+        const iframe = iframeRefs.current[llmId];
+        if (iframe) {
+          iframe.src = iframe.src;
+        }
       }
-    }
+    });
   }, [enabledLLMs]);
 
   const handleToggleMaximize = useCallback((llmId: string) => {
