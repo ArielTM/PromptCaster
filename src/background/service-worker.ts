@@ -99,6 +99,49 @@ chrome.runtime.onMessage.addListener(
       });
     }
 
+    if (message.type === 'EXECUTE_TEXT_INJECTION') {
+      const { prompt } = message as Message & { prompt: string };
+      const tabId = sender.tab?.id;
+      const frameId = sender.frameId;
+
+      if (!tabId || frameId === undefined) {
+        sendResponse({ success: false, error: 'Missing tabId or frameId from sender' });
+        return true;
+      }
+
+      chrome.scripting.executeScript({
+        target: { tabId, frameIds: [frameId] },
+        world: 'MAIN',
+        func: (text: string) => {
+          const inputEl = document.querySelector('#ask-input');
+          if (!inputEl) return { success: false, error: 'Input not found' };
+
+          const fiberKey = Object.keys(inputEl).find(k => k.startsWith('__reactFiber'));
+          if (!fiberKey) return { success: false, error: 'React fiber not found' };
+
+          let fiber = (inputEl as unknown as Record<string, unknown>)[fiberKey] as { memoizedProps?: Record<string, unknown>; return?: unknown } | null;
+          while (fiber) {
+            const onChange = fiber.memoizedProps?.onChange;
+            if (typeof onChange === 'function') {
+              onChange(text);
+              return { success: true };
+            }
+            fiber = fiber.return as typeof fiber;
+          }
+
+          return { success: false, error: 'onChange handler not found in fiber tree' };
+        },
+        args: [prompt],
+      }).then((results) => {
+        sendResponse(results[0]?.result || { success: false });
+      }).catch((err) => {
+        console.error('PromptCaster: executeScript (text injection) failed', err);
+        sendResponse({ success: false, error: err.message });
+      });
+
+      return true;
+    }
+
     if (message.type === 'EXECUTE_FILE_INJECTION') {
       const { filesData } = message;
       const tabId = sender.tab?.id;

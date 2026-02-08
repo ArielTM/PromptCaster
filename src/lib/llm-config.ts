@@ -45,7 +45,7 @@ export const LLM_CONFIGS: Record<string, LLMConfig> = {
     name: 'Perplexity',
     url: 'https://www.perplexity.ai/',
     selectors: {
-      input: 'textarea[placeholder*="Ask"]',
+      input: '#ask-input',
       sendButton: 'button[aria-label="Submit"], button[type="submit"]',
       responseContainer: '.prose, [class*="answer"]',
       loadingIndicator: '[class*="loading"]',

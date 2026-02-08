@@ -93,7 +93,18 @@ const injectPrompt = async (prompt: string): Promise<boolean> => {
   }
 
   // Handle different input types
-  if (inputEl.tagName === 'TEXTAREA') {
+  if (llmId === 'perplexity') {
+    // Perplexity uses a React-controlled contenteditable div.
+    // execCommand updates the DOM but not React state, so we must
+    // call React's onChange via the fiber tree in the main world.
+    const injected = await new Promise<boolean>((resolve) => {
+      chrome.runtime.sendMessage(
+        { type: 'EXECUTE_TEXT_INJECTION', prompt },
+        (response) => resolve(response?.success ?? false)
+      );
+    });
+    if (!injected) return false;
+  } else if (inputEl.tagName === 'TEXTAREA') {
     (inputEl as HTMLTextAreaElement).value = prompt;
     inputEl.dispatchEvent(new Event('input', { bubbles: true }));
   } else if (inputEl.getAttribute('contenteditable') === 'true') {
