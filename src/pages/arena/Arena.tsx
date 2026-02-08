@@ -15,9 +15,16 @@ export default function Arena() {
   const [responses, setResponses] = useState<Record<string, LLMResponse>>({});
   const [isJudgeMode, setIsJudgeMode] = useState(false);
   const [maximizedLlmId, setMaximizedLlmId] = useState<string | null>(null);
+  const [iframesReady, setIframesReady] = useState(false);
   const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
 
   useEffect(() => {
+    // Clear LLM service workers before loading iframes so that
+    // declarativeNetRequest can strip CSP headers from network responses
+    chrome.runtime.sendMessage({ type: 'CLEAR_SERVICE_WORKERS' }, () => {
+      setIframesReady(true);
+    });
+
     getSettings().then(setSettings);
 
     const handleMessage = (message: { type: string; payload?: ResponsePayload }) => {
@@ -272,7 +279,7 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
           gridTemplateRows: '1fr',
         }}
       >
-        {enabledLLMs.map((llmId) => (
+        {iframesReady && enabledLLMs.map((llmId) => (
           <LLMPanel
             key={llmId}
             llmId={llmId}

@@ -69,6 +69,30 @@ chrome.runtime.onMessage.addListener(
       return true;
     }
 
+    if (message.type === 'CLEAR_SERVICE_WORKERS') {
+      // Clear service workers for LLM origins before loading iframes.
+      // Some sites (e.g. Perplexity) have SWs that cache responses with CSP headers,
+      // bypassing declarativeNetRequest header stripping.
+      const origins: [string, ...string[]] = [
+        'https://www.perplexity.ai',
+        'https://chatgpt.com',
+        'https://chat.openai.com',
+        'https://claude.ai',
+        'https://gemini.google.com',
+        'https://grok.com',
+      ];
+      chrome.browsingData.remove(
+        { origins },
+        { serviceWorkers: true }
+      ).then(() => {
+        sendResponse({ success: true });
+      }).catch((err) => {
+        console.warn('PromptCaster: Failed to clear service workers:', err);
+        sendResponse({ success: false });
+      });
+      return true;
+    }
+
     if (message.type === 'RESPONSE_UPDATE' || message.type === 'RESPONSE_COMPLETE') {
       chrome.runtime.sendMessage(message).catch(() => {
         // Arena page might not be open

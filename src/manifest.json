@@ -9,7 +9,8 @@
     "declarativeNetRequestWithHostAccess",
     "activeTab",
     "webNavigation",
-    "scripting"
+    "scripting",
+    "browsingData"
   ],
   "host_permissions": [
     "https://chat.openai.com/*",
