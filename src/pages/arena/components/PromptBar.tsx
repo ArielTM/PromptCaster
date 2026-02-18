@@ -71,43 +71,6 @@ export default function PromptBar({
     textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
   }, [prompt]);
 
-  // Prevent iframes from stealing focus while user is typing
-  useEffect(() => {
-    let userInitiatedBlur = false;
-
-    const markUserInitiated = () => {
-      userInitiatedBlur = true;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          userInitiatedBlur = false;
-        });
-      });
-    };
-
-    const handlePointerDown = () => markUserInitiated();
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') markUserInitiated();
-    };
-
-    const handleTextareaBlur = () => {
-      if (userInitiatedBlur) return;
-      requestAnimationFrame(() => {
-        textareaRef.current?.focus();
-      });
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown, true);
-    document.addEventListener('keydown', handleKeyDown, true);
-    const textarea = textareaRef.current;
-    textarea?.addEventListener('blur', handleTextareaBlur);
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown, true);
-      document.removeEventListener('keydown', handleKeyDown, true);
-      textarea?.removeEventListener('blur', handleTextareaBlur);
-    };
-  }, []);
-
   // Global keyboard shortcut for New Chat (Cmd/Ctrl+Shift+O)
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
