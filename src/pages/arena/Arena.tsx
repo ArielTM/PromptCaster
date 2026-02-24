@@ -105,6 +105,15 @@ export default function Arena() {
     setMaximizedLlmId((prev) => (prev === llmId ? null : llmId));
   }, []);
 
+  const handleReloadIframe = useCallback((llmId: string) => {
+    chrome.runtime.sendMessage({ type: 'CLEAR_SERVICE_WORKERS' }, () => {
+      const iframe = iframeRefs.current[llmId];
+      if (iframe) {
+        iframe.src = iframe.src;
+      }
+    });
+  }, []);
+
   const handleSendToJudge = useCallback(async () => {
     if (!settings.judgeId) return;
 
@@ -289,6 +298,7 @@ Synthesize the best answer by combining the most accurate, complete, and helpful
             isMaximized={maximizedLlmId === llmId}
             isHidden={maximizedLlmId !== null && maximizedLlmId !== llmId}
             onToggleMaximize={() => handleToggleMaximize(llmId)}
+            onReload={() => handleReloadIframe(llmId)}
             ref={(el) => {
               iframeRefs.current[llmId] = el;
             }}

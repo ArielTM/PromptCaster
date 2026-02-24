@@ -7,10 +7,11 @@ interface LLMPanelProps {
   isMaximized: boolean;
   isHidden: boolean;
   onToggleMaximize: () => void;
+  onReload: () => void;
 }
 
 const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
-  ({ llmId, isJudge, isMaximized, isHidden, onToggleMaximize }, ref) => {
+  ({ llmId, isJudge, isMaximized, isHidden, onToggleMaximize, onReload }, ref) => {
     const [isLoading, setIsLoading] = useState(true);
     const config = LLM_CONFIGS[llmId];
 
@@ -38,7 +39,30 @@ const LLMPanel = forwardRef<HTMLIFrameElement, LLMPanelProps>(
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => {
+                setIsLoading(true);
+                onReload();
+              }}
+              className="p-1 hover:bg-[var(--bg-primary)] rounded transition-colors"
+              title="Reload"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </button>
             <button
               onClick={onToggleMaximize}
               className="p-1 hover:bg-[var(--bg-primary)] rounded transition-colors"
