@@ -101,13 +101,6 @@ export default function PromptBar({
             />
           </svg>
         </button>
-        <JudgeControls
-          judgeId={judgeId}
-          enabledLLMCount={enabledLLMCount}
-          onSendToJudge={onSendToJudge}
-          hasResponses={hasResponses}
-          isJudging={isJudging}
-        />
         <input
           ref={fileInputRef}
           type="file"
@@ -167,6 +160,13 @@ export default function PromptBar({
             </svg>
           </span>
         </button>
+        <JudgeControls
+          judgeId={judgeId}
+          enabledLLMCount={enabledLLMCount}
+          onSendToJudge={onSendToJudge}
+          hasResponses={hasResponses}
+          isJudging={isJudging}
+        />
         <a
           href={settingsUrl}
           target="_blank"
